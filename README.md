@@ -1,9 +1,9 @@
-# OneSide - BattleShipGame
+# OneSide - Battleship Game
 
 Steps to build and run:
 1. Download / Clone the project from GitHub
 2. Build Battleship.App
-3. Run the Battleship\bin\Debug\BattleShip.App.exe and Enjoy the game
+3. Run the Battleship\bin\Debug\Battleship.App.exe and Enjoy the game
 4. For test purpose, if you run the project in Debug mode after the Ships are placed on Board, their positions will be displayed
 
 
