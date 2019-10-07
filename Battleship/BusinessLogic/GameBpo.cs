@@ -44,7 +44,7 @@ namespace Battleship.App.BusinessLogic
                     return PlaceShipStatus.NotEnoughSpace;
                 }
 
-                if (IsUsed(coordinate))
+                if (InUse(coordinate))
                 {
                     return PlaceShipStatus.Overlap;
                 }
@@ -65,7 +65,7 @@ namespace Battleship.App.BusinessLogic
                 for (var y = 1; y <= this.PlayerBoard.GridDimension; y++)
                 {
                     var coordinate = new Coordinate(x, y);
-                    if (displayShips && IsUsed(coordinate))
+                    if (displayShips && InUse(coordinate))
                     {
                         Console.Write("S  ");
                     }
@@ -109,15 +109,17 @@ namespace Battleship.App.BusinessLogic
             var ship = this.PlayerBoard.Ships.FirstOrDefault(x => x.Coordinates.Contains(coordinate));
             if (ship != null)
             {
-                shotStatus = ShotStatus.Hit;
-                if (ship.Life-- == 1)
-                {
-                    shotStatus = ShotStatus.Sank;
-                }
+                ship.WasShot();
+                shotStatus = ship.IsSunk() ? ShotStatus.Sank : ShotStatus.Hit;
             }
             this.PlayerBoard.ShotHistory.Add(coordinate, shotStatus);
 
             return shotStatus;
+        }
+
+        public bool AllShipAreSunk()
+        {
+            return this.PlayerBoard.Ships.All(s => s.IsSunk());
         }
 
         private bool IsValidCoordinate(Coordinate coordinate)
@@ -126,7 +128,7 @@ namespace Battleship.App.BusinessLogic
                    coordinate.Y >= 1 && coordinate.Y <= this.PlayerBoard.GridDimension;
         }
 
-        private bool IsUsed(Coordinate coordinate)
+        private bool InUse(Coordinate coordinate)
         {
             return this.PlayerBoard.Ships.SelectMany(ship => ship.Coordinates).Contains(coordinate);
         }

@@ -9,7 +9,25 @@ namespace Battleship.Tests
     [TestClass]
     public class GameBpoShotTest
     {
-        //todo: Add test for all Shot Type
+        [TestMethod]
+        public void Shot_InvalidCoordinate_Invalid()
+        {
+            var game = CreateTestGame();
+
+            var result = game.Shot(new Coordinate(20, 20));
+
+            Assert.AreEqual(ShotStatus.Invalid, result);
+        }
+
+        [TestMethod]
+        public void Shot_ValidCoordinate_Miss()
+        {
+            var game = CreateTestGame();
+
+            var result = game.Shot(new Coordinate(3, 3));
+
+            Assert.AreEqual(ShotStatus.Miss, result);
+        }
 
         [TestMethod]
         public void Shot_ValidCoordinate_Hit()
@@ -19,6 +37,29 @@ namespace Battleship.Tests
             var result = game.Shot(new Coordinate(2, 1));
 
             Assert.AreEqual(ShotStatus.Hit, result);
+        }
+
+        [TestMethod]
+        public void Shot_ValidCoordinate_Sank()
+        {
+            var game = CreateTestGame();
+            game.Shot(new Coordinate(2, 1));
+            game.Shot(new Coordinate(2, 2));
+            game.Shot(new Coordinate(2, 3));
+            var result = game.Shot(new Coordinate(2, 4));
+
+            Assert.AreEqual(ShotStatus.Sank, result);
+        }
+
+        [TestMethod]
+        public void Shot_ValidCoordinate_Duplicate()
+        {
+            var game = CreateTestGame();
+
+            game.Shot(new Coordinate(2, 5));
+            var result = game.Shot(new Coordinate(2, 5));
+
+            Assert.AreEqual(ShotStatus.Duplicate, result);
         }
 
         private static GameBpo CreateTestGame()

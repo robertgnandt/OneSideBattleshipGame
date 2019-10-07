@@ -28,5 +28,7 @@ namespace Battleship.App.BusinessLogic.Contracts
         /// </summary>
         /// <returns>The shot status</returns>
         ShotStatus Shot(Coordinate coordinate);
+
+        bool AllShipAreSunk();
     }
 }

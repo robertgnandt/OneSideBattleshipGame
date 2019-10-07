@@ -9,10 +9,28 @@ namespace Battleship.Tests
     [TestClass]
     public class GameBpoPlaceShipTest
     {
-        //todo: Add test for all Placement Status 
+        [TestMethod]
+        public void PlaceShipOnBoard_ValidFirstCoordinate_Ok()
+        {
+            var game = CreateTestGame();
+
+            var result = game.PlaceShipOnBoard(new Ship(4, true), new Coordinate(1, 1));
+
+            Assert.AreEqual(PlaceShipStatus.Ok, result);
+        }
 
         [TestMethod]
-        public void PlaceShipOnBoard_ValidFirstShipCoordinate_NotEnoughPlace()
+        public void PlaceShipOnBoard_ValidFirstCoordinate_NotEnoughSpace()
+        {
+            var game = CreateTestGame();
+
+            var result = game.PlaceShipOnBoard(new Ship(4, false), new Coordinate(15, 1));
+
+            Assert.AreEqual(PlaceShipStatus.NotEnoughSpace, result);
+        }
+
+        [TestMethod]
+        public void PlaceShipOnBoard_ValidFirstCoordinate_Overlap()
         {
             var game = CreateTestGame();
 

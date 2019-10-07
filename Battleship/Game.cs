@@ -10,6 +10,9 @@ namespace Battleship.App
     {
         private readonly IGameBpo _gameBpo;
 
+        private const int SmallShipSize = 4;
+        private const int BigShipSize = 5;
+
         public Game(IGameBpo gameBpo)
         {
             _gameBpo = gameBpo;
@@ -17,10 +20,6 @@ namespace Battleship.App
 
         public void StartGame()
         {
-            _gameBpo.PlaceShipRandomly(5);
-            _gameBpo.PlaceShipRandomly(4);
-            _gameBpo.PlaceShipRandomly(4);
-
             if (System.Diagnostics.Debugger.IsAttached)
             {
                 _gameBpo.DisplayGame(true);
@@ -28,21 +27,18 @@ namespace Battleship.App
 
             Console.WriteLine("All ships were placed successfully! Let's start the GAME...");
 
-            bool allShipAreSunk;
             do
             {
                 var shotStatus = _gameBpo.Shot(GetShotCoordinates());
                 Console.WriteLine($"Shot: {shotStatus}");
 
                 _gameBpo.DisplayGame();
-                allShipAreSunk = !_gameBpo.PlayerBoard.Ships.Any(s => s.Life > 0);
-
-                if (allShipAreSunk) continue;
+                if(_gameBpo.AllShipAreSunk()) continue;
 
                 Console.WriteLine("Press any key to continue....");
                 Console.ReadKey();
                 Console.Clear();
-            } while (!allShipAreSunk);
+            } while (!_gameBpo.AllShipAreSunk());
 
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Green;
@@ -50,6 +46,23 @@ namespace Battleship.App
             Console.ResetColor();
             _gameBpo.DisplayGame(true);
             Console.ReadKey();
+        }
+
+        public bool PlaceShips()
+        {
+            try
+            {
+                _gameBpo.PlaceShipRandomly(BigShipSize);
+                _gameBpo.PlaceShipRandomly(SmallShipSize);
+                _gameBpo.PlaceShipRandomly(SmallShipSize);
+            }
+            catch
+            {
+                // log the error
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -72,6 +85,5 @@ namespace Battleship.App
                 return new Coordinate(x, y);
             }
         }
-
     }
 }

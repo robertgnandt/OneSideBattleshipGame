@@ -8,14 +8,24 @@
 
         public int ShipSize;
 
-        public int Life;
+        private int _life;
 
         public Ship(int size, bool isHorizontal)
         {
             this.Coordinates = new Coordinate[size];
             this.ShipSize = size;
             this.IsHorizontal = isHorizontal;
-            this.Life = size;
+            _life = size;
+        }
+
+        public bool IsSunk()
+        {
+            return _life == 0;
+        }
+
+        public void WasShot()
+        {
+            _life--;
         }
     }
 }
